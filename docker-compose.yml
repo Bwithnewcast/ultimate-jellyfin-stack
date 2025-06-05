@@ -3,8 +3,6 @@ version: "3.0"
 networks:
   proxy:
     external: true
-  jellyfin_default:
-    external: true
   starr:
     external: true
   jellystat:
