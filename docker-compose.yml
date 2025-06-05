@@ -9,7 +9,7 @@ networks:
     external: true
   gluetun_network:
     external: true
-      
+
 services:
   # REVERSE PROXY IS IN OTHER DOCKER COMPOSE STACK
 
@@ -35,7 +35,7 @@ services:
     networks:
       - proxy
       - starr
-    
+
   #Radarr - used to find movies automatically
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -55,7 +55,7 @@ services:
       gluetun_network:
         ipv4_address: ${RADARR_IPV4}
     restart: unless-stopped
-    
+
   #Sonarr - used to find shows automatically
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -75,7 +75,7 @@ services:
       gluetun_network:
         ipv4_address: ${SONARR_IPV4}
     restart: unless-stopped
-  
+
   #Readarr - Used to download books
   readarr:
     image: lscr.io/linuxserver/readarr:develop
@@ -93,8 +93,8 @@ services:
       - proxy
       - starr
     restart: unless-stopped
-    
-  #Lidarr - Used to download music 
+
+  #Lidarr - Used to download music
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
@@ -126,7 +126,7 @@ services:
       - ${MEDIA_SHARE}/temp_downloads:/app/temp_downloads
       - ${MEDIA_SHARE}:/data
     restart: unless-stopped
-    
+
   #Prowlarr - manages your Sonarr, Radarr and download client
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -139,7 +139,7 @@ services:
     volumes:
       - ${BASE_PATH}/prowlarr/config:/config
     restart: unless-stopped
-    
+
   #Autobrr - used to grab torrents using the trackers IRC channel - Increases seeding due to grabbing content before RSS feed
   autobrr:
     container_name: autobrr
@@ -170,7 +170,7 @@ services:
     ports:
       - 5055:5055
     restart: unless-stopped
-    
+
   #Flaresolerr - Used as a proxy server to bypass Cloudflare and DDoS-GUARD protection.
   flaresolverr:
     # DockerHub mirror flaresolverr/flaresolverr:latest
@@ -185,7 +185,7 @@ services:
       - LANG=en_GB
       - DRIVER=nodriver
     restart: unless-stopped
-      
+
   #Qbittorent - torrenting software
   #
   #You can also use RuTorrent, Transmisson or Deluge
@@ -237,7 +237,7 @@ services:
      - /dev/dri:/dev/dri #Required for HW transcoding /share QuickSync
     networks:
       - proxy
-      
+
   #Bazarr - for subtitles. Try to use SRT format if you can rather than PGS due to performance issues
   bazarr:
     container_name: bazarr
@@ -255,7 +255,7 @@ services:
     networks:
       - starr
       - proxy
-      
+
   #Cross Seed - used to take torrents from one tracker and seed them on another without leeching first. Increases ratio
   #
   #This is fairly advanced but can be removed if you don't think you will need it. Some trackers also don't allow this
@@ -275,7 +275,7 @@ services:
       # - ${MEDIA_SHARE}/cross-seed/current-cross-seeds:/data/cross-seeds # A place to temp save current cross seed .torrent files
       #- ${MEDIA_SHARE}/downloads:/data # OPTIONAL!!! this is dataDir path (for data-based matching) - will need to replicate your torrent client's container path (like Arr's do)
     command: daemon # this enables the search mode, change to daemon to specifically run the daemon
-    
+
   #Wizarr - Allows you to create a share link that you can send to users to invite them to your media server
   wizarr:
     container_name: wizarr
@@ -289,11 +289,11 @@ services:
       - proxy
       - starr
     environment:
-      - APP_URL=${WIZARR_URL} #URL at which you will access and share 
+      - APP_URL=${WIZARR_URL} #URL at which you will access and share
       - DISABLE_BUILTIN_AUTH=false #Set to true ONLY if you are using another auth provider (Authelia, Authentik, etc)
       - TZ=${TZ} #Set your timezone here
-      
-  #Dozzle - Used to easily view logs of any container in real time!    
+
+  #Dozzle - Used to easily view logs of any container in real time!
   dozzle:
     container_name: dozzle
     image: amir20/dozzle:latest
@@ -302,7 +302,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 9999:8080
-    
+
   #Unpacker - Used to unzip zipped files
   unpackerr:
     image: ghcr.io/hotio/unpackerr:latest
@@ -314,7 +314,7 @@ services:
       - ${BASE_PATH}/unpackerr/config:/config
     restart: unless-stopped
     # What you see below are defaults for this compose. You only need to modify things specific to your environment.
-    # Remove apps and feature configs you do not use or need. 
+    # Remove apps and feature configs you do not use or need.
     # ie. Remove all lines that begin with UN_CMDHOOK, UN_WEBHOOK, UN_FOLDER, UN_WEBSERVER, and other apps you do not use.
     environment:
       - PUID=${PUID}
@@ -354,7 +354,7 @@ services:
       - PGID=${PGID}
     networks:
       - proxy
-      
+
   gluetun:
     image: qmcgaw/gluetun:latest
     container_name: gluetun
@@ -415,7 +415,7 @@ services:
      # TEST_RUN=True
      # SSL_VERIFICATION=False
      LOG_LEVEL: INFO
-     ## Features 
+     ## Features
      REMOVE_TIMER: 10
      REMOVE_FAILED: True
      REMOVE_FAILED_IMPORTS: True
@@ -433,10 +433,10 @@ services:
      # Feature Settings
      PERMITTED_ATTEMPTS: 3
      NO_STALLED_REMOVAL_QBIT_TAG: Don't Kill
-     MIN_DOWNLOAD_SPEED: 100     
+     MIN_DOWNLOAD_SPEED: 100
      FAILED_IMPORT_MESSAGE_PATTERNS: '
         [
-          "Not a Custom Format upgrade for existing", 
+          "Not a Custom Format upgrade for existing",
           "Not an upgrade for existing"
         ]'
      ## Radarr
@@ -488,6 +488,15 @@ services:
     depends_on:
       - jellystat-db
     restart: unless-stopped
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+
     networks:
       - jellystat
       - proxy
