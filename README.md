@@ -39,9 +39,8 @@ This Plex Stack includes the following services:
 2. Add this link `https://github.com/Wh1rr/ultimate-jellyfin-stack/blob/main/docker-compose.yml` as repository URL
 3. Add your environment variables using the below examples.
 
-## Example of Environment variables in Portainer
-Keep in mind some variable names have changed since this screenshot was taken
-![jellyfin-stack](https://github.com/user-attachments/assets/1b984a6f-df7f-46c9-9dd1-54c62b6854a6)
+## Enviroment variables
+example .env file is attached witch is drag and drop in portainer
 
   
 File location examples:
@@ -68,9 +67,8 @@ Setting up the starr apps might be a bit confusing the first time, but to keep i
   
 Anytime you reference your media folder in a container you want the path to look like /share/media/tv instead of /tv like a lot of the default guides say, if you do end up mapping the path as /tv hardlinking will not work
 
-## Recommendations
+## TODO
 
-1. Get familiar with reverse proxies
-2. Install portainer to manage and monitor containers
-3. Use Cloudflare tunnels
+1. Reverse proxy
+2. Cloudflared tunnel
 
