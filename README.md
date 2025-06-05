@@ -68,4 +68,5 @@ Anytime you reference your media folder in a container you want the path to look
 
 1. Reverse proxy
 2. Cloudflared tunnel
+3. Update readme with network instructions
 
