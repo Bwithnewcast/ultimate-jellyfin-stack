@@ -36,11 +36,8 @@ This Plex Stack includes the following services:
 
 ## How to Use - Using portainer
 1. Create a new stack using the Repository build method
-2. Add this link `https://github.com/Wh1rr/ultimate-jellyfin-stack/blob/main/docker-compose.yml` as repository URL
-3. Add your environment variables using the below examples.
-
-## Enviroment variables
-example .env file is attached witch is drag and drop in portainer
+2. Add this link `https://github.com/Bwithnewcast/ultimate-jellyfin-stack/blob/main/docker-compose.yml` as repository URL
+3. example .env file is attached witch is drag and drop in portainer
 
   
 File location examples:
