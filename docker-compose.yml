@@ -1,5 +1,3 @@
-version: "3.0"
-
 networks:
   proxy:
     external: true
@@ -11,7 +9,21 @@ networks:
     external: true
 
 services:
-  # REVERSE PROXY IS IN OTHER DOCKER COMPOSE STACK
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginx-proxy-manager
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    ports:
+      - '81:81'
+    networks:
+      proxy:
+    restart: unless-stopped
 
   #Jellyfin - used to display the media
   #This can also be replaced by Emby/Plex
@@ -22,9 +34,6 @@ services:
       - JELLYFIN_PublishedServerUrl=${JELLYFIN_URL}
       - PUID=${PUID}
       - PGID=${PGID}
-    ports:
-      - 8096:8096
-      - 8920:8920
     devices:
      - /dev/dri:/dev/dri #Required for jellyfin HW transcoding / QuickSync
     volumes:
@@ -47,8 +56,6 @@ services:
     volumes:
       - ${BASE_PATH}/radarr/config:/config
       - ${MEDIA_SHARE}:/data #Access to the entire /media
-    ports:
-      - 7878:7878
     networks:
       proxy:
       starr:
@@ -67,8 +74,6 @@ services:
     volumes:
       - ${BASE_PATH}/sonarr/config:/config
       - ${MEDIA_SHARE}:/data #Access to the entire /media
-    ports:
-      - 8989:8989
     networks:
       proxy:
       starr:
@@ -87,8 +92,6 @@ services:
     volumes:
       - ${BASE_PATH}/readarr/config:/config
       - ${MEDIA_SHARE}:/data
-    ports:
-      - 8787:8787
     networks:
       - proxy
       - starr
@@ -105,8 +108,6 @@ services:
     volumes:
       - ${BASE_PATH}/lidarr/config:/config
       - ${MEDIA_SHARE}:/data
-    ports:
-      - 8686:8686
     networks:
       - proxy
       - starr
@@ -167,8 +168,6 @@ services:
     networks:
       - proxy
       - starr
-    ports:
-      - 5055:5055
     restart: unless-stopped
 
   #Flaresolerr - Used as a proxy server to bypass Cloudflare and DDoS-GUARD protection.
@@ -212,9 +211,6 @@ services:
     container_name: tdarr
     image: ghcr.io/haveagitgat/tdarr:latest
     restart: unless-stopped
-    ports:
-      - 8265:8265 # webUI port
-      - 8266:8266 # server port
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
@@ -250,8 +246,6 @@ services:
     volumes:
       - ${BASE_PATH}/bazarr/config:/config
       - ${MEDIA_SHARE}:/data
-    ports:
-      - 6767:6767
     networks:
       - starr
       - proxy
@@ -281,8 +275,6 @@ services:
     container_name: wizarr
     image: ghcr.io/wizarrrr/wizarr:latest
     restart: unless-stopped
-    ports:
-      - 5690:5690
     volumes:
       - ${BASE_PATH}/wizarr/data/database:/data/database
     networks:
@@ -300,8 +292,6 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 9999:8080
 
   #Unpacker - Used to unzip zipped files
   unpackerr:
@@ -345,9 +335,6 @@ services:
     volumes:
       - ${BASE_PATH}/cabernet/extensions:/app/plugins_ext
       - ${BASE_PATH}/cabernet/data:/app/data
-    ports:
-      - 5004:5004/tcp
-      - 6077:6077/tcp
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
@@ -398,8 +385,6 @@ services:
       - ${BASE_PATH}/homarr/configs:/app/data/configs
       - ${BASE_PATH}/homarr/icons:/app/public/icons
       - ${BASE_PATH}/homarr/data:/data
-    ports:
-      - 7575:7575
     networks:
       - proxy
 
@@ -481,8 +466,6 @@ services:
       POSTGRES_IP: jellystat-db
       POSTGRES_PORT: 5432
       JWT_SECRET: ${JWT_SECRET:-'my-secret-jwt-key'}
-    ports:
-      - 3000:3000 #Server Port
     volumes:
       - ${BASE_PATH}/jellystat/postgres-backup:/app/backend/backup-data # Mounting the volume
     depends_on:
@@ -498,5 +481,4 @@ services:
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
 
     networks:
-      - jellystat
       - proxy
