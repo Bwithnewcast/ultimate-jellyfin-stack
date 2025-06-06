@@ -73,5 +73,6 @@ Anytime you reference your media folder in a container you want the path to look
 2. Add sso with authelia or something simular
 3. Use nginx as reverse proxy instead of nginx proxy manager.
 4. Add how to configure cloudflare
+5. Add Notifiarr
 
 
