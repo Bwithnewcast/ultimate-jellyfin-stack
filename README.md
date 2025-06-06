@@ -8,7 +8,7 @@ This Jellyfin Stack includes the following services:
 
 - **Jellyfin:** Media server for streaming movies and TV shows.
 - **Cloudflared:** Tunnel into the docker network.
-- **nginx proxy manager:**Proxy so the sites are accesible from jellyfin.domain.com
+- **nginx proxy manager:** Proxy so the sites are accesible from jellyfin.domain.com
 - **Radarr:** Movie management and automation.
 - **Sonarr:** TV show management and automation.
 - **Readarr:** Used to grab books and audiobooks.
