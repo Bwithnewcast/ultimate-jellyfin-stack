@@ -74,5 +74,6 @@ Anytime you reference your media folder in a container you want the path to look
 3. Use nginx as reverse proxy instead of nginx proxy manager.
 4. Add how to configure cloudflare
 5. Add Notifiarr
+6. Add blog server to domain.com (ghost?)
 
 
