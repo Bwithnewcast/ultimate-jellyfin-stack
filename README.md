@@ -4,9 +4,11 @@ Welcome to my Jellyfin stack repository! This repository showcases my Docker Com
 
 ## Overview
 
-This Plex Stack includes the following services:
+This Jellyfin Stack includes the following services:
 
 - **Jellyfin:** Media server for streaming movies and TV shows.
+- **Cloudflared:** Tunnel into the docker network.
+- **nginx proxy manager:**Proxy so the sites are accesible from jellyfin.domain.com
 - **Radarr:** Movie management and automation.
 - **Sonarr:** TV show management and automation.
 - **Readarr:** Used to grab books and audiobooks.
@@ -36,8 +38,9 @@ This Plex Stack includes the following services:
 
 ## How to Use - Using portainer
 1. Create a new stack using the Repository build method
-2. Add this link `https://github.com/Bwithnewcast/ultimate-jellyfin-stack/blob/main/docker-compose.yml` as repository URL
-3. example .env file is attached wich is drag and drop in portainer
+2. Run the initilize network script to make the necessary docker networks.
+3. Add this link `https://github.com/Bwithnewcast/ultimate-jellyfin-stack/blob/main/docker-compose.yml` as repository URL
+4. example .env file is attached wich is drag and drop in portainer
 
   
 File location examples:
@@ -66,7 +69,9 @@ Anytime you reference your media folder in a container you want the path to look
 
 ## TODO
 
-1. Reverse proxy
-2. Cloudflared tunnel
-3. Update readme with network instructions
+1. Make own file for initilizing the docker networks.
+2. Add sso with authelia or something simular
+3. Use nginx as reverse proxy instead of nginx proxy manager.
+4. Add how to configure cloudflare
+
 
