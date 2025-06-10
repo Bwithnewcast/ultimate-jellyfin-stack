@@ -1,80 +1,213 @@
-# The Ultimate Jellyfin Stack!
+# 🎬 Personal Media Server Stack
 
-Welcome to my Jellyfin stack repository! This repository showcases my Docker Compose setup for managing various media-related services using Docker containers. The compose file is meant to be changed to each users liking as I know not everyone has the same requirements. Hope you enjoy!
+Welcome to your ultimate personal media server stack!  
+This setup uses Docker Compose to orchestrate a suite of media management, VPN, and proxy services — all containerized and customizable.
 
-## Overview
+---
 
-This Jellyfin Stack includes the following services:
+## 🚀 Overview
 
-- **Jellyfin:** Media server for streaming movies and TV shows.
-- **Cloudflared:** Tunnel into the docker network.
-- **nginx proxy manager:** Proxy so the sites are accesible from jellyfin.domain.com
-- **Radarr:** Movie management and automation.
-- **Sonarr:** TV show management and automation.
-- **Readarr:** Used to grab books and audiobooks.
-- **Lidarr:** Used to grab music.
-- **Kapowarr** Used to grab comics.
-- **Prowlarr:** Indexer manager for Radarr and Sonarr.
-- **Jellyseerr:** Request management and monitoring for Jellyfin.
-- **Gluetun:** VPN container with WireGuard support for secure browsing.
-- **Qbittorrent:** BitTorrent client with VPN support.
-- **Tdarr:** Pre-transcodes your media to decrease file sizes
-- **Bazarr:** Subtitle management for movies and TV shows.
-- **Autobrr:** Used to grab torrents immediately as they are released.
-- **Flaresolverr:** Used as a proxy server to bypass Cloudflare and DDoS-GUARD protection.
-- **Dozzle:** Used to view the logs of any container.
-- **Wizarr:** Used to create links that can be sent to users so they can be invited to your media server.
-- **Homarr:** Used as a dashboard for docker containers with integrations for the *arr, torrent, and Jellyfin apps.
-- **Decluttarr:** Used to maintain/clean your *arr app queues and downloads.
-- **Jellystat:** Used to monitor the usage of each user or content on your jellyfin server.
+This stack includes:
 
-![containers](https://github.com/user-attachments/assets/855014b1-2716-4370-975d-a02564df881e)
+- **Media servers & managers**: Jellyfin, Radarr, Sonarr, Readarr, Lidarr, Bazarr, Tdarr, etc.
+- **Torrent & downloader tools**: qBittorrent, Kapowarr, Cross-seed, Autobrr, Unpackerr
+- **VPN routing**: Gluetun (Wireguard ProtonVPN)
+- **Proxy & reverse proxy**: Currently Nginx Proxy Manager (planned migration to Nginx + Authelia for SSO)
+- **Notifications & monitoring**: Notifiarr, Uptime Kuma, Whisparr (planned)
+- **Other utilities**: Dozzle logs, Jellystat, Wizarr, Cabernet
+- **Blog server**: Planned Ghost blog on your domain
 
-## Dependencies
+---
 
-1. Linux
-2. Docker / Docker Compose
-3. OPTIONAL: Portainer - Docker GUI
+## 📝 TODO List
 
-## How to Use - Using portainer
-1. Create a new stack using the Repository build method
-2. Run the initilize network script to make the necessary docker networks.
-3. Add this link `https://github.com/Bwithnewcast/ultimate-jellyfin-stack/blob/main/docker-compose.yml` as repository URL
-4. example .env file is attached wich is drag and drop in portainer
+| Task                                             | Status |
+|--------------------------------------------------|--------|
+| Split Docker network initialization to a separate file | ⬜      |
+| Replace Nginx Proxy Manager with Nginx + Authelia for SSO | ⬜      |
+| Add Cloudflare configuration guide                | ⬜      |
+| Integrate Notifiarr, Whisparr, and Uptime Kuma    | ⬜      |
+| Add blog server (Ghost) at domain.com              | ⬜      |
 
-  
-File location examples:
-- {MEDIA_SHARE} = ~/Jellyfin/share
-- {BASE_PATH} = ~/Jellyfin/home
+---
 
-To allow hardlinking to work (which you will definitely want!) you will have to use the same root folder in all of your container path. In this example we use "/share", so in the container it will look like "/share/downloads/tv"
+## 🖼️ Architecture Diagram
 
-An example folder structure:  
-![image](https://github.com/DonMcD/ultimate-plex-stack/assets/90471623/2003ac26-a929-4ff6-ad67-e35fc51fb51a)
-  
-- Feel free to expand your folders to also include "books" or "music" as you need for your setup
-  
-## Starr apps
-Setting up the starr apps might be a bit confusing the first time, but to keep it simple:
-1. Prowlarr manages the indexes for *some* starr apps (radarr and sonarr)
-2. The following starr apps make use of the download client (qBittorent) to download their respective content type:
-   1. Radarr - Movies
-   2. Sonarr - TV Shows
-   3. Lidarr - Music
-   4. Readarr - Books
-   5. Kapowarr - Comics
-3. Jellyseer is a platform which combines the request system in radarr and sonarr to make a nice UI/UX to find and auto download the content.
-  
-Anytime you reference your media folder in a container you want the path to look like /share/media/tv instead of /tv like a lot of the default guides say, if you do end up mapping the path as /tv hardlinking will not work
+```mermaid
+graph LR
+  style proxy fill:#f9f,stroke:#333,stroke-width:2px
+  style starr fill:#bbf,stroke:#333,stroke-width:2px
+  style gluetun_network fill:#bfb,stroke:#333,stroke-width:2px
 
-## TODO
+  subgraph Proxy Network
+    proxy[Nginx Proxy Manager]
+    notifiarr[Notifiarr]
+    jellyfin[Jellyfin]
+    tdarr[Tdarr]
+    wizarr[Wizarr]
+    cabernet[Cabernet]
+    bazarr[Bazarr]
+    jellyseerr[Jellyseerr]
+    unpackerr[Unpackerr]
+  end
 
-1. Make own file for initilizing the docker networks.
-2. Add sso with authelia or something simular
-3. Use nginx as reverse proxy instead of nginx proxy manager.
-4. Add how to configure cloudflare
-5. Add Notifiarr, whisparr, uptimekuma
-6. Add blog server to domain.com (ghost?)
-7. Fix cross-seed
+  subgraph Starr Network
+    radarr[Radarr]
+    sonarr[Sonarr]
+    readarr[Readarr]
+    lidarr[Lidarr]
+    bazarr
+    wizarr
+  end
 
+  subgraph Gluetun VPN Network
+    gluetun[Gluetun VPN]
+    qbittorrent[qBittorrent]
+    prowlarr[Prowlarr]
+    kapowarr[Kapowarr]
+    autobrr[Autobrr]
+    crossseed[Cross-seed]
+    flaresolverr[Flaresolverr]
+  end
+
+  gluetun -->|VPN Tunnel| Internet[Internet]
+
+  qbittorrent --> gluetun
+  prowlarr --> gluetun
+  kapowarr --> gluetun
+  autobrr --> gluetun
+  crossseed --> gluetun
+  flaresolverr --> gluetun
+
+  jellyfin --> proxy
+  radarr --> starr & proxy & gluetun_network
+  sonarr --> starr & proxy & gluetun_network
+  readarr --> starr & proxy
+  lidarr --> starr & proxy
+  bazarr --> starr & proxy
+
+  tdarr --> proxy
+  wizarr --> starr & proxy
+  cabernet --> proxy
+  unpackerr --> proxy
+
+🔧 Setup Instructions
+1️⃣ Initialize Docker Networks
+
+Create and run the network initialization script:
+
+#!/bin/bash
+set -e
+
+echo "Creating Docker external networks..."
+
+docker network create proxy || echo "Network 'proxy' already exists"
+docker network create starr || echo "Network 'starr' already exists"
+docker network create jellystat || echo "Network 'jellystat' already exists"
+docker network create gluetun_network || echo "Network 'gluetun_network' already exists"
+
+echo "Docker networks initialized!"
+
+Save this as docker-networks.sh, make executable with chmod +x docker-networks.sh, then run ./docker-networks.sh once.
+2️⃣ Environment Variables
+
+Create a .env file with variables like:
+
+PUID=1000
+PGID=1000
+TZ=Europe/London
+
+BASE_PATH=/path/to/appdata
+MEDIA_SHARE=/path/to/media
+WIREGUARD_KEY=your_wireguard_private_key
+WIREGUARD_ADD=10.0.0.2/24
+VPN_SERVER_COUNTRIES=US,CA
+RADARR_IPV4=172.18.0.10
+RADARR_KEY=your_radarr_api_key
+SONARR_KEY=your_sonarr_api_key
+NOTIFIARR_API_KEY=your_notifiarr_api_key
+JELLYFIN_URL=http://yourdomain.com/jellyfin
+WIZARR_URL=http://yourdomain.com/wizarr
+PUBLICIP_API=https://api.ipify.org
+PUBLICIP_TOKEN=your_api_token
+FREE_ONLY=false
+
+3️⃣ Replace Nginx Proxy Manager with Nginx + Authelia (SSO)
+
+Plan:
+
+    Deploy Nginx as your reverse proxy (replace current Nginx Proxy Manager).
+
+    Use Authelia for secure Single Sign-On with MFA.
+
+    Configure Nginx to authenticate via Authelia for all services.
+
+    Integrate with Cloudflare for DNS and enhanced security.
+
+Example Nginx + Authelia flow:
+
+graph TD
+  Client --> Nginx
+  Nginx --> Authelia
+  Authelia --> UserDB[User Database]
+  Authelia --> Nginx
+  Nginx --> BackendServices[Your Media Services]
+
+4️⃣ Configure Cloudflare
+
+    Point your domain/subdomains to your server IP.
+
+    Enable Cloudflare proxy (orange cloud) for subdomains.
+
+    Use Full (strict) SSL/TLS mode.
+
+    Set Firewall rules to protect services.
+
+    Optionally configure Cloudflare Access for extra security.
+
+5️⃣ Additional Services
+
+    Notifiarr: Cross-service notifications.
+
+    Whisparr: Media requests and approvals.
+
+    Uptime Kuma: Service uptime monitoring.
+
+    Ghost: Blogging platform at blog.yourdomain.com.
+
+📚 Resources & References
+
+    Gluetun Docker
+
+    LinuxServer.io Docker Images
+
+    Authelia SSO
+
+    Cloudflare Docs
+
+    Ghost Blog Platform
+
+🎨 Contribution & Ideas
+
+Open issues or PRs to:
+
+    Help with migration to Nginx + Authelia.
+
+    Add Cloudflare or Ghost configuration guides.
+
+    Improve Docker Compose setups.
+
+docker-networks.sh
+
+#!/bin/bash
+set -e
+
+echo "Creating Docker external networks..."
+
+docker network create proxy || echo "Network 'proxy' already exists"
+docker network create starr || echo "Network 'starr' already exists"
+docker network create jellystat || echo "Network 'jellystat' already exists"
+docker network create gluetun_network || echo "Network 'gluetun_network' already exists"
+
+echo "Docker networks initialized!"
 
