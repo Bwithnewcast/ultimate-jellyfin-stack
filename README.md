@@ -68,11 +68,13 @@ graph LR
   unpackerr --> proxy
 ```
 
-🔧 Setup Instructions
-1️⃣ Initialize Docker Networks
+# 🔧 Setup Instructions
 
-Create a file named init-networks.sh with the following content and run it to create all necessary external Docker networks:
+## 1️⃣ Initialize Docker Networks
 
+Create a file named `init-networks.sh` with the following content and run it to create all necessary external Docker networks:
+
+```bash
 #!/bin/bash
 set -e
 
@@ -92,16 +94,18 @@ chmod +x init-networks.sh
 
 2️⃣ Configure Environment Variables
 
-Create a .env file to store all environment variables like PUID, PGID, TZ, VPN keys, and IP addresses referenced in docker-compose.yml.
+Create a .env file to store environment variables like PUID, PGID, TZ, VPN keys, and IP addresses referenced in your docker-compose.yml.
 
 Example .env:
 
 PUID=1000
 PGID=1000
 TZ=Europe/London
+
 WIREGUARD_KEY=your_wireguard_private_key
 WIREGUARD_ADD=10.0.0.2/32
 VPN_SERVER_COUNTRIES=US
+
 PUBLICIP_API=ipify
 PUBLICIP_TOKEN=your_token
 FREE_ONLY=false
@@ -124,7 +128,7 @@ MEDIA_SHARE=/path/to/media
 
     Use Cloudflare DNS to manage your domains.
 
-    Enable Cloudflare SSL with “Full (strict)” mode for secure connections.
+    Enable Cloudflare SSL with Full (strict) mode for secure connections.
 
     Set up Cloudflare Tunnel if needed.
 
@@ -152,7 +156,7 @@ Prowlarr	Indexers manager	gluetun_network
 qBittorrent	Torrent client	gluetun_network
 Gluetun	VPN container	proxy, starr, gluetun_network
 Notifiarr	Notifications	proxy
-Authelia	SSO & 2FA	proxy (self-hosted, add)
+Authelia	SSO & 2FA	proxy
 Bazarr	Subtitles	proxy, starr
 Tdarr	Video transcoding	proxy
 Cross-seed	Torrent seeding	gluetun_network
@@ -166,7 +170,7 @@ Flaresolverr	Captcha solver	gluetun_network
 Wizarr	Media discovery & stats	proxy, starr
 💡 Tips
 
-    Use Docker Compose override files to customize services without touching main compose file.
+    Use Docker Compose override files to customize services without touching the main compose file.
 
     Keep your media mounts clean and consistent.
 
@@ -191,4 +195,3 @@ License
 MIT License © 2025 YourName
 
 Made with ❤️ by Media Server Enthusiasts
-
