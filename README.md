@@ -64,7 +64,7 @@ graph LR
   cabernet --> proxy
   unpackerr --> proxy
 
-🔧 Setup Instructions
+Setup Instructions
 1️⃣ Initialize Docker Networks
 
 Create a file named init-networks.sh with the following content and run it to create all necessary external Docker networks:
