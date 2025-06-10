@@ -22,8 +22,22 @@ services:
     ports:
       - '81:81'
     networks:
-      proxy:
+      - proxy
     restart: unless-stopped
+
+
+  notifiarr:
+    image: golift/notifiarr
+    container_name: notifiarr
+    environment:
+      - TZ=${TZ}
+      - NOTIFIARR_API_KEY=${NOTIFIARR_API_KEY}
+    volumes:
+      - ${BASE_PATH}/notifiarr/config:/config
+    restart: unless-stopped
+    networks:
+      - proxy
+
 
   #Jellyfin - used to display the media
   #This can also be replaced by Emby/Plex
@@ -45,6 +59,7 @@ services:
       - proxy
       - starr
 
+
   #Radarr - used to find movies automatically
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -57,8 +72,8 @@ services:
       - ${BASE_PATH}/radarr/config:/config
       - ${MEDIA_SHARE}:/data #Access to the entire /media
     networks:
-      proxy:
-      starr:
+      - proxy
+      - starr
       gluetun_network:
         ipv4_address: ${RADARR_IPV4}
     restart: unless-stopped
@@ -75,8 +90,8 @@ services:
       - ${BASE_PATH}/sonarr/config:/config
       - ${MEDIA_SHARE}:/data #Access to the entire /media
     networks:
-      proxy:
-      starr:
+      - proxy
+      - starr
       gluetun_network:
         ipv4_address: ${SONARR_IPV4}
     restart: unless-stopped
@@ -184,6 +199,7 @@ services:
       - LANG=en_GB
       - DRIVER=nodriver
     restart: unless-stopped
+
 
   #Qbittorent - torrenting software
   #
@@ -326,7 +342,7 @@ services:
       - UN_RADARR_0_TIMEOUT=10s
       #- UN_RADARR_0_PATHS_0=/${BASE_PATH}/downloads/movies
     networks:
-      - starr
+      - proxy
 
   cabernet:
     image: ghcr.io/cabernetwork/cabernet:latest
@@ -351,16 +367,16 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     environment:
-      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_SERVICE_PROVIDER=protonvpn
       - VPN_TYPE=wireguard
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_KEY}
       - WIREGUARD_ADDRESSES=${WIREGUARD_ADD}
-      - SERVER_CITIES=${VPN_SERVER_CITIES}
+      - SERVER_COUNTRIES=${VPN_SERVER_COUNTRIES}
       - UPDATER_PERIOD=24h
-      - UPDATER_VPN_SERVICE_PROVIDERS=mullvad
       - WIREGUARD_MTU=${WIREGUARD_MTU:-1200}
       - PUBLICIP_API=${PUBLICIP_API}
       - PUBLICIP_API_TOKEN=${PUBLICIP_TOKEN}
+      - FREE_ONLY=${FREE_ONLY}
     ports:
       - 2468:2468/tcp # cross-seed
       - 8080:8080/tcp # qBit
@@ -373,8 +389,6 @@ services:
       - starr
       - proxy
       - gluetun_network
-    # IF VPN CANNOT CONNECT, USE BELOW COMMAND TO UPDATE SERVERS.
-    # command: update -enduser -providers mullvad
 
   homarr:
     container_name: homarr
