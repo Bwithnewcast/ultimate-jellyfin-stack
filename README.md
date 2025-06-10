@@ -91,13 +91,13 @@ Run:
 
 chmod +x init-networks.sh
 ./init-networks.sh
-
-2️⃣ Configure Environment Variables
+```
+##2️⃣ Configure Environment Variables
 
 Create a .env file to store environment variables like PUID, PGID, TZ, VPN keys, and IP addresses referenced in your docker-compose.yml.
 
 Example .env:
-
+```bash
 PUID=1000
 PGID=1000
 TZ=Europe/London
@@ -115,8 +115,8 @@ SONARR_IPV4=172.18.0.11
 
 BASE_PATH=/path/to/appdata
 MEDIA_SHARE=/path/to/media
-
-3️⃣ Replace Nginx Proxy Manager with Nginx + SSO (Authelia)
+```
+##3️⃣ Replace Nginx Proxy Manager with Nginx + SSO (Authelia)
 
     We recommend setting up your own Nginx reverse proxy for more control.
 
@@ -124,7 +124,7 @@ MEDIA_SHARE=/path/to/media
 
     Example config and setup can be found in /docs/nginx-authelia-setup.md (you'll need to create this).
 
-4️⃣ Cloudflare DNS & SSL Configuration
+##4️⃣ Cloudflare DNS & SSL Configuration
 
     Use Cloudflare DNS to manage your domains.
 
@@ -134,7 +134,7 @@ MEDIA_SHARE=/path/to/media
 
     Don’t forget to whitelist your Cloudflare IPs if you enable firewall rules.
 
-5️⃣ Additional Services to Add
+##5️⃣ Additional Services to Add
 
     Notifiarr for notifications about media.
 
