@@ -66,6 +66,7 @@ graph LR
   wizarr --> proxy
   cabernet --> proxy
   unpackerr --> proxy
+```
 
 🔧 Setup Instructions
 1️⃣ Initialize Docker Networks
