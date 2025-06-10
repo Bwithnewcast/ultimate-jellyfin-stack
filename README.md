@@ -8,10 +8,6 @@ Welcome to the Ultimate Media Server stack! This Docker Compose setup features a
 
 ```mermaid
 graph LR
-  style proxy fill:#ffcccc,stroke:#990000,stroke-width:2px
-  style starr fill:#cce5ff,stroke:#004085,stroke-width:2px
-  style gluetun_network fill:#ccffcc,stroke:#006600,stroke-width:2px
-
   subgraph Proxy Network
     proxy[Nginx Proxy Manager]
     notifiarr[Notifiarr]
@@ -43,7 +39,7 @@ graph LR
     flaresolverr[Flaresolverr]
   end
 
-  gluetun -->|VPN Tunnel| Internet[Internet]
+  gluetun --> Internet[Internet]
 
   qbittorrent --> gluetun
   prowlarr --> gluetun
@@ -53,18 +49,25 @@ graph LR
   flaresolverr --> gluetun
 
   jellyfin --> proxy
-  radarr --> starr & proxy & gluetun_network
-  sonarr --> starr & proxy & gluetun_network
-  readarr --> starr & proxy
-  lidarr --> starr & proxy
-  bazarr --> starr & proxy
-
+  radarr --> starr
+  radarr --> proxy
+  radarr --> gluetun
+  sonarr --> starr
+  sonarr --> proxy
+  sonarr --> gluetun
+  readarr --> starr
+  readarr --> proxy
+  lidarr --> starr
+  lidarr --> proxy
+  bazarr --> starr
+  bazarr --> proxy
   tdarr --> proxy
-  wizarr --> starr & proxy
+  wizarr --> starr
+  wizarr --> proxy
   cabernet --> proxy
   unpackerr --> proxy
 
-Setup Instructions
+🔧 Setup Instructions
 1️⃣ Initialize Docker Networks
 
 Create a file named init-networks.sh with the following content and run it to create all necessary external Docker networks:
