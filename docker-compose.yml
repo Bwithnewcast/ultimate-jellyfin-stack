@@ -346,3 +346,29 @@ services:
       - starr
       - proxy
       - gluetun_network
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - proxy
+
+  homarr:
+    image: ghcr.io/ajnart/homarr:latest
+    container_name: homarr
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${BASE_PATH}/homarr/configs:/app/data/configs
+      - ${BASE_PATH}/homarr/icons:/app/public/icons
+      - ${BASE_PATH}/homarr/data:/data
+    networks:
+      - proxy
+      - starr
