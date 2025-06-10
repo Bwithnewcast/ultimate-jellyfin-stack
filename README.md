@@ -51,10 +51,10 @@ graph LR
   jellyfin --> proxy
   radarr --> starr
   radarr --> proxy
-  radarr --> gluetun
+  radarr --> gluetun_network
   sonarr --> starr
   sonarr --> proxy
-  sonarr --> gluetun
+  sonarr --> gluetun_network
   readarr --> starr
   readarr --> proxy
   lidarr --> starr
