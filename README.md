@@ -19,6 +19,7 @@ graph LR
     bazarr[Bazarr]
     jellyseerr[Jellyseerr]
     unpackerr[Unpackerr]
+    homarr[Homarr]
   end
 
   subgraph Starr Network
@@ -28,6 +29,7 @@ graph LR
     lidarr[Lidarr]
     bazarr
     wizarr
+    homarr
   end
 
   subgraph Gluetun VPN Network
@@ -65,6 +67,8 @@ graph LR
   tdarr --> proxy
   wizarr --> starr
   wizarr --> proxy
+  homarr --> starr
+  homarr --> proxy
   cabernet --> proxy
   unpackerr --> proxy
 ```
@@ -157,29 +161,30 @@ MEDIA_SHARE=/path/to/media
 ## 🧱 Services Overview
 
 | Service            | Description                        | Network(s)                   |
-|--------------------|------------------------------------|------------------------------|
-| Nginx Proxy Manager| Reverse proxy UI                   | proxy                        |
-| Jellyfin           | Media server                       | proxy, starr                 |
-| Radarr             | Movie management                   | proxy, starr, gluetun_network|
-| Sonarr             | TV series management               | proxy, starr, gluetun_network|
-| Lidarr             | Music management                   | proxy, starr                 |
-| Readarr            | Books management                   | proxy, starr                 |
-| Prowlarr           | Indexers manager                   | gluetun_network              |
-| qBittorrent        | Torrent client                     | gluetun_network              |
-| Gluetun            | VPN container                      | proxy, starr, gluetun_network|
-| Notifiarr          | Notifications                      | proxy                        |
-| Authelia           | SSO & 2FA                          | proxy                        |
-| Bazarr             | Subtitles                          | proxy, starr                 |
-| Tdarr              | Video transcoding                  | proxy                        |
-| Cross-seed         | Torrent seeding                    | gluetun_network              |
-| Jellyseerr         | Jellyfin companion UI              | proxy, starr                 |
-| Unpackerr          | Auto extraction                    | proxy                        |
-| Dozzle             | Docker log viewer                  | host                         |
-| Cabernet           | Media health & analytics           | proxy                        |
-| Autobrr            | Auto torrent downloader            | gluetun_network              |
-| Kapowarr           | Automation & notifications         | gluetun_network              |
-| Flaresolverr       | Captcha solver                     | gluetun_network              |
-| Wizarr             | Media discovery & stats            | proxy, starr                 |
+|--------------------|----------------------------------|------------------------------|
+| Nginx Proxy Manager | Reverse proxy UI                 | proxy                        |
+| Jellyfin           | Media server                     | proxy, starr                 |
+| Radarr             | Movie management                 | proxy, starr, gluetun_network|
+| Sonarr             | TV series management             | proxy, starr, gluetun_network|
+| Lidarr             | Music management                 | proxy, starr                 |
+| Readarr            | Books management                 | proxy, starr                 |
+| Prowlarr           | Indexers manager                 | gluetun_network              |
+| qBittorrent        | Torrent client                  | gluetun_network              |
+| Gluetun            | VPN container                  | proxy, starr, gluetun_network|
+| Notifiarr          | Notifications                  | proxy                        |
+| Authelia           | SSO & 2FA                      | proxy                        |
+| Bazarr             | Subtitles                      | proxy, starr                 |
+| Tdarr              | Video transcoding              | proxy                        |
+| Cross-seed         | Torrent seeding                | gluetun_network              |
+| Jellyseerr         | Jellyfin companion UI          | proxy, starr                 |
+| Unpackerr          | Auto extraction                | proxy                        |
+| Dozzle             | Docker log viewer              | host                         |
+| Cabernet           | Media health & analytics       | proxy                        |
+| Autobrr            | Auto torrent downloader        | gluetun_network              |
+| Kapowarr           | Automation & notifications     | gluetun_network              |
+| Flaresolverr       | Captcha solver                 | gluetun_network              |
+| Wizarr             | Media discovery & stats        | proxy, starr                 |
+| **Homarr**         | Media dashboard                | **proxy, starr**             |
 
 ---
 
@@ -204,5 +209,5 @@ MEDIA_SHARE=/path/to/media
 
 ## 📝 License
 
-MIT License © 2025 Bwithnewcast 
-Made with ❤️ by Media Server Enthusiasts
+MIT License © 2025 Bwithnewcast  
+Made with ❤️ by Media Server Enthusiasts  
