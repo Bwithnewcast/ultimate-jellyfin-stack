@@ -67,6 +67,7 @@ graph LR
   cabernet --> proxy
   unpackerr --> proxy
 ```
+---
 
 # 🔧 Setup Instructions
 
@@ -92,7 +93,8 @@ Run:
 chmod +x init-networks.sh
 ./init-networks.sh
 ```
-##2️⃣ Configure Environment Variables
+---
+#2️⃣ Configure Environment Variables
 
 Create a .env file to store environment variables like PUID, PGID, TZ, VPN keys, and IP addresses referenced in your docker-compose.yml.
 
@@ -116,15 +118,17 @@ SONARR_IPV4=172.18.0.11
 BASE_PATH=/path/to/appdata
 MEDIA_SHARE=/path/to/media
 ```
-##3️⃣ Replace Nginx Proxy Manager with Nginx + SSO (Authelia)
+---
+#3️⃣ Replace Nginx Proxy Manager with Nginx + SSO (Authelia)
 
     We recommend setting up your own Nginx reverse proxy for more control.
 
     Integrate Authelia for single sign-on (SSO) and 2FA security.
 
     Example config and setup can be found in /docs/nginx-authelia-setup.md (you'll need to create this).
+ ---
 
-##4️⃣ Cloudflare DNS & SSL Configuration
+#4️⃣ Cloudflare DNS & SSL Configuration
 
     Use Cloudflare DNS to manage your domains.
 
@@ -133,8 +137,9 @@ MEDIA_SHARE=/path/to/media
     Set up Cloudflare Tunnel if needed.
 
     Don’t forget to whitelist your Cloudflare IPs if you enable firewall rules.
+  ---
 
-##5️⃣ Additional Services to Add
+#5️⃣ Additional Services to Add
 
     Notifiarr for notifications about media.
 
@@ -143,8 +148,9 @@ MEDIA_SHARE=/path/to/media
     Uptime Kuma for service monitoring.
 
     Blog server (Ghost) on blog.domain.com to host your blog seamlessly.
+  ---
 
-🧱 Services Overview
+#🧱 Services Overview
 Service	Description	Network(s)
 Nginx Proxy Manager	Reverse proxy UI (replace with Nginx + Authelia)	proxy
 Jellyfin	Media server	proxy, starr
@@ -168,7 +174,8 @@ Autobrr	Auto torrent downloader	gluetun_network
 Kapowarr	Automation & notifications	gluetun_network
 Flaresolverr	Captcha solver	gluetun_network
 Wizarr	Media discovery & stats	proxy, starr
-💡 Tips
+---
+#💡 Tips
 
     Use Docker Compose override files to customize services without touching the main compose file.
 
@@ -179,8 +186,9 @@ Wizarr	Media discovery & stats	proxy, starr
     Monitor VPN status inside Gluetun to avoid leaks.
 
     Integrate Uptime Kuma to keep tabs on all service uptime.
+  ---
 
-📚 Resources
+#📚 Resources
 
     Gluetun VPN GitHub
 
@@ -195,3 +203,4 @@ License
 MIT License © 2025 YourName
 
 Made with ❤️ by Media Server Enthusiasts
+---
