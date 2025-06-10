@@ -66,10 +66,10 @@ services:
       - ${BASE_PATH}/radarr/config:/config
       - ${MEDIA_SHARE}:/data # Access to the entire /media
     networks:
-      - proxy
-      - starr
-      - gluetun_network
-    ipv4_address: ${RADARR_IPV4}
+      proxy:
+      starr:
+      gluetun_network:
+        ipv4_address: ${RADARR_IPV4}
     restart: unless-stopped
 
   sonarr:
@@ -83,10 +83,10 @@ services:
       - ${BASE_PATH}/sonarr/config:/config
       - ${MEDIA_SHARE}:/data # Access to the entire /media
     networks:
-      - proxy
-      - starr
-      - gluetun_network
-    ipv4_address: ${SONARR_IPV4}
+      proxy:
+      starr:
+      gluetun_network:
+        ipv4_address: ${RADARR_IPV4}
     restart: unless-stopped
 
   readarr:
