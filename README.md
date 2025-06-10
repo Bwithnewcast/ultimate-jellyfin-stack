@@ -1,33 +1,6 @@
-# 🎬 Personal Media Server Stack
+# 🎬 Ultimate Media Server Stack
 
-Welcome to your ultimate personal media server stack!  
-This setup uses Docker Compose to orchestrate a suite of media management, VPN, and proxy services — all containerized and customizable.
-
----
-
-## 🚀 Overview
-
-This stack includes:
-
-- **Media servers & managers**: Jellyfin, Radarr, Sonarr, Readarr, Lidarr, Bazarr, Tdarr, etc.
-- **Torrent & downloader tools**: qBittorrent, Kapowarr, Cross-seed, Autobrr, Unpackerr
-- **VPN routing**: Gluetun (Wireguard ProtonVPN)
-- **Proxy & reverse proxy**: Currently Nginx Proxy Manager (planned migration to Nginx + Authelia for SSO)
-- **Notifications & monitoring**: Notifiarr, Uptime Kuma, Whisparr (planned)
-- **Other utilities**: Dozzle logs, Jellystat, Wizarr, Cabernet
-- **Blog server**: Planned Ghost blog on your domain
-
----
-
-## 📝 TODO List
-
-| Task                                             | Status |
-|--------------------------------------------------|--------|
-| Split Docker network initialization to a separate file | ⬜      |
-| Replace Nginx Proxy Manager with Nginx + Authelia for SSO | ⬜      |
-| Add Cloudflare configuration guide                | ⬜      |
-| Integrate Notifiarr, Whisparr, and Uptime Kuma    | ⬜      |
-| Add blog server (Ghost) at domain.com              | ⬜      |
+Welcome to the Ultimate Media Server stack! This Docker Compose setup features a full media ecosystem — Jellyfin, Radarr, Sonarr, Lidarr, Readarr, Prowlarr, qBittorrent, Gluetun VPN, and many more — all orchestrated for easy deployment.
 
 ---
 
@@ -35,9 +8,9 @@ This stack includes:
 
 ```mermaid
 graph LR
-  style proxy fill:#f9f,stroke:#333,stroke-width:2px
-  style starr fill:#bbf,stroke:#333,stroke-width:2px
-  style gluetun_network fill:#bfb,stroke:#333,stroke-width:2px
+  style proxy fill:#ffcccc,stroke:#990000,stroke-width:2px
+  style starr fill:#cce5ff,stroke:#004085,stroke-width:2px
+  style gluetun_network fill:#ccffcc,stroke:#006600,stroke-width:2px
 
   subgraph Proxy Network
     proxy[Nginx Proxy Manager]
@@ -94,7 +67,7 @@ graph LR
 🔧 Setup Instructions
 1️⃣ Initialize Docker Networks
 
-Create and run the network initialization script:
+Create a file named init-networks.sh with the following content and run it to create all necessary external Docker networks:
 
 #!/bin/bash
 set -e
@@ -108,106 +81,110 @@ docker network create gluetun_network || echo "Network 'gluetun_network' already
 
 echo "Docker networks initialized!"
 
-Save this as docker-networks.sh, make executable with chmod +x docker-networks.sh, then run ./docker-networks.sh once.
-2️⃣ Environment Variables
+Run:
 
-Create a .env file with variables like:
+chmod +x init-networks.sh
+./init-networks.sh
+
+2️⃣ Configure Environment Variables
+
+Create a .env file to store all environment variables like PUID, PGID, TZ, VPN keys, and IP addresses referenced in docker-compose.yml.
+
+Example .env:
 
 PUID=1000
 PGID=1000
 TZ=Europe/London
+WIREGUARD_KEY=your_wireguard_private_key
+WIREGUARD_ADD=10.0.0.2/32
+VPN_SERVER_COUNTRIES=US
+PUBLICIP_API=ipify
+PUBLICIP_TOKEN=your_token
+FREE_ONLY=false
+
+RADARR_IPV4=172.18.0.10
+SONARR_IPV4=172.18.0.11
 
 BASE_PATH=/path/to/appdata
 MEDIA_SHARE=/path/to/media
-WIREGUARD_KEY=your_wireguard_private_key
-WIREGUARD_ADD=10.0.0.2/24
-VPN_SERVER_COUNTRIES=US,CA
-RADARR_IPV4=172.18.0.10
-RADARR_KEY=your_radarr_api_key
-SONARR_KEY=your_sonarr_api_key
-NOTIFIARR_API_KEY=your_notifiarr_api_key
-JELLYFIN_URL=http://yourdomain.com/jellyfin
-WIZARR_URL=http://yourdomain.com/wizarr
-PUBLICIP_API=https://api.ipify.org
-PUBLICIP_TOKEN=your_api_token
-FREE_ONLY=false
 
-3️⃣ Replace Nginx Proxy Manager with Nginx + Authelia (SSO)
+3️⃣ Replace Nginx Proxy Manager with Nginx + SSO (Authelia)
 
-Plan:
+    We recommend setting up your own Nginx reverse proxy for more control.
 
-    Deploy Nginx as your reverse proxy (replace current Nginx Proxy Manager).
+    Integrate Authelia for single sign-on (SSO) and 2FA security.
 
-    Use Authelia for secure Single Sign-On with MFA.
+    Example config and setup can be found in /docs/nginx-authelia-setup.md (you'll need to create this).
 
-    Configure Nginx to authenticate via Authelia for all services.
+4️⃣ Cloudflare DNS & SSL Configuration
 
-    Integrate with Cloudflare for DNS and enhanced security.
+    Use Cloudflare DNS to manage your domains.
 
-Example Nginx + Authelia flow:
+    Enable Cloudflare SSL with “Full (strict)” mode for secure connections.
 
-graph TD
-  Client --> Nginx
-  Nginx --> Authelia
-  Authelia --> UserDB[User Database]
-  Authelia --> Nginx
-  Nginx --> BackendServices[Your Media Services]
+    Set up Cloudflare Tunnel if needed.
 
-4️⃣ Configure Cloudflare
+    Don’t forget to whitelist your Cloudflare IPs if you enable firewall rules.
 
-    Point your domain/subdomains to your server IP.
+5️⃣ Additional Services to Add
 
-    Enable Cloudflare proxy (orange cloud) for subdomains.
+    Notifiarr for notifications about media.
 
-    Use Full (strict) SSL/TLS mode.
+    Whisparr for managing whisper notifications.
 
-    Set Firewall rules to protect services.
+    Uptime Kuma for service monitoring.
 
-    Optionally configure Cloudflare Access for extra security.
+    Blog server (Ghost) on blog.domain.com to host your blog seamlessly.
 
-5️⃣ Additional Services
+🧱 Services Overview
+Service	Description	Network(s)
+Nginx Proxy Manager	Reverse proxy UI (replace with Nginx + Authelia)	proxy
+Jellyfin	Media server	proxy, starr
+Radarr	Movie management	proxy, starr, gluetun_network
+Sonarr	TV series management	proxy, starr, gluetun_network
+Lidarr	Music management	proxy, starr
+Readarr	Books management	proxy, starr
+Prowlarr	Indexers manager	gluetun_network
+qBittorrent	Torrent client	gluetun_network
+Gluetun	VPN container	proxy, starr, gluetun_network
+Notifiarr	Notifications	proxy
+Authelia	SSO & 2FA	proxy (self-hosted, add)
+Bazarr	Subtitles	proxy, starr
+Tdarr	Video transcoding	proxy
+Cross-seed	Torrent seeding	gluetun_network
+Jellyseerr	Jellyfin companion UI	proxy, starr
+Unpackerr	Auto extraction	proxy
+Dozzle	Docker log viewer	host
+Cabernet	Media health & analytics	proxy
+Autobrr	Auto torrent downloader	gluetun_network
+Kapowarr	Automation & notifications	gluetun_network
+Flaresolverr	Captcha solver	gluetun_network
+Wizarr	Media discovery & stats	proxy, starr
+💡 Tips
 
-    Notifiarr: Cross-service notifications.
+    Use Docker Compose override files to customize services without touching main compose file.
 
-    Whisparr: Media requests and approvals.
+    Keep your media mounts clean and consistent.
 
-    Uptime Kuma: Service uptime monitoring.
+    Regularly back up your configs.
 
-    Ghost: Blogging platform at blog.yourdomain.com.
+    Monitor VPN status inside Gluetun to avoid leaks.
 
-📚 Resources & References
+    Integrate Uptime Kuma to keep tabs on all service uptime.
 
-    Gluetun Docker
+📚 Resources
 
-    LinuxServer.io Docker Images
+    Gluetun VPN GitHub
 
-    Authelia SSO
+    Authelia SSO Documentation
 
-    Cloudflare Docs
+    Cloudflare DNS & SSL
 
-    Ghost Blog Platform
+    Ghost Blog
 
-🎨 Contribution & Ideas
+License
 
-Open issues or PRs to:
+MIT License © 2025 YourName
 
-    Help with migration to Nginx + Authelia.
-
-    Add Cloudflare or Ghost configuration guides.
-
-    Improve Docker Compose setups.
-
-docker-networks.sh
-
-#!/bin/bash
-set -e
-
-echo "Creating Docker external networks..."
-
-docker network create proxy || echo "Network 'proxy' already exists"
-docker network create starr || echo "Network 'starr' already exists"
-docker network create jellystat || echo "Network 'jellystat' already exists"
-docker network create gluetun_network || echo "Network 'gluetun_network' already exists"
-
-echo "Docker networks initialized!"
+Made with ❤️ by Media Server Enthusiasts
 
