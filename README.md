@@ -30,6 +30,7 @@ graph LR
     bazarr
     wizarr
     homarr
+    prowlarr
   end
 
   subgraph Gluetun VPN Network
