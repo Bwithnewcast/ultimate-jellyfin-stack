@@ -36,6 +36,7 @@ services:
     restart: unless-stopped
     networks:
       - proxy
+      - starr
 
   jellyfin:
     image: ghcr.io/linuxserver/jellyfin:latest
@@ -122,7 +123,6 @@ services:
   kapowarr:
     image: 'mrcas/kapowarr:latest'
     container_name: kapowarr
-    network_mode: "service:gluetun"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -131,18 +131,26 @@ services:
       - ${BASE_PATH}/kapowarr/config:/app/db
       - ${MEDIA_SHARE}/temp_downloads:/app/temp_downloads
       - ${MEDIA_SHARE}:/data
+    networks:
+      starr:
+      gluetun_network:
+        ipv4_address: ${RADARR_IPV4}
     restart: unless-stopped
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
-    network_mode: "service:gluetun"
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
       - ${BASE_PATH}/prowlarr/config:/config
+    networks:
+      proxy:
+      starr:
+      gluetun_network:
+        ipv4_address: ${PROWLARR_IPV4}
     restart: unless-stopped
 
   autobrr:
