@@ -153,7 +153,6 @@ MEDIA_SHARE=/path/to/media
 ### 5️⃣ Additional Services to Add
 
 - **Notifiarr** for notifications about media.
-- **Whisparr** for managing whisper notifications.
 - **Uptime Kuma** for service monitoring.
 - **Ghost blog** at `blog.domain.com` to host your blog seamlessly.
 
